@@ -8,10 +8,12 @@ export interface BriefEntry {
   slug: string;
 }
 
+// Used server-side (ISR). Vercel's fetch cache dedupes within the same
+// revalidation window — index.json fetched once per hour at most.
 export async function fetchIndex(): Promise<BriefEntry[]> {
   try {
     const res = await fetch(`${RAW_BASE}/index.json`, {
-      cache: "no-store",
+      next: { revalidate: 3600 }, // 1 hour — matches page revalidate
     });
     if (!res.ok) return [];
     return res.json();
@@ -20,11 +22,13 @@ export async function fetchIndex(): Promise<BriefEntry[]> {
   }
 }
 
-export async function fetchBrief(slug: string): Promise<string> {
+// Today's brief: 1 hour TTL (new one arrives at 8 AM IST, stale for at most 1h).
+// Past briefs: immutable after midnight, cache 24 hours.
+export async function fetchBrief(slug: string, isToday = false): Promise<string> {
   if (!slug) return "";
   try {
     const res = await fetch(`${RAW_BASE}/briefs/${slug}.md`, {
-      cache: "no-store",
+      next: { revalidate: isToday ? 3600 : 86400 },
     });
     if (!res.ok) return "";
     return res.text();
