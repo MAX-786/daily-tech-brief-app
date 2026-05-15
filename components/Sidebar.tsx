@@ -226,8 +226,6 @@ export default function Sidebar({
         >
           Mohammad K. Hussain
         </a>
-        <br />
-        Powered by Hermes Agent
       </div>
     </aside>
   );
