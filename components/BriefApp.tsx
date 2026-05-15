@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import Sidebar from "./Sidebar";
 import BriefContent from "./BriefContent";
 import ThemeToggle from "./ThemeToggle";
+import { useAppStore } from "@/lib/store";
 import type { BriefEntry } from "@/lib/github";
 
 interface BriefAppProps {
@@ -20,16 +21,15 @@ export default function BriefApp({
   const [activeSlug, setActiveSlug] = useState(defaultSlug);
   const [content, setContent] = useState(defaultContent);
   const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const sidebarCollapsed = useAppStore((s) => s.sidebarCollapsed);
 
   const selectBrief = useCallback(
     async (slug: string) => {
-      if (slug === activeSlug) {
-        setSidebarOpen(false);
-        return;
-      }
+      setMobileOpen(false);
+      if (slug === activeSlug) return;
       setLoading(true);
-      setSidebarOpen(false);
       try {
         const res = await fetch(
           `https://raw.githubusercontent.com/MAX-786/daily-tech-brief/main/briefs/${slug}.md`
@@ -45,96 +45,62 @@ export default function BriefApp({
   );
 
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        backgroundColor: "var(--bg)",
-      }}
-    >
+    <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "var(--bg)" }}>
       {/* Mobile overlay */}
-      {sidebarOpen && (
+      {mobileOpen && (
         <div
           style={{
-            position: "fixed",
-            inset: 0,
-            backgroundColor: "rgba(0,0,0,0.4)",
-            zIndex: 20,
+            position: "fixed", inset: 0,
+            backgroundColor: "rgba(0,0,0,0.45)",
+            zIndex: 20, backdropFilter: "blur(2px)",
           }}
-          onClick={() => setSidebarOpen(false)}
+          onClick={() => setMobileOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
       <Sidebar
         index={index}
         activeSlug={activeSlug}
         onSelect={selectBrief}
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
+        mobileOpen={mobileOpen}
+        onMobileClose={() => setMobileOpen(false)}
       />
 
-      {/* Main content */}
-      <main
-        style={{
-          flex: 1,
-          minWidth: 0,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <main style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
         {/* Mobile header */}
         <header
           className="mobile-header"
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            padding: "0.875rem 1rem",
+            display: "flex", alignItems: "center", gap: "0.75rem",
+            padding: "0.75rem 1rem",
             borderBottom: "1px solid var(--border)",
             backgroundColor: "var(--bg)",
-            position: "sticky",
-            top: 0,
-            zIndex: 10,
+            position: "sticky", top: 0, zIndex: 10,
           }}
         >
           <button
-            onClick={() => setSidebarOpen(true)}
+            onClick={() => setMobileOpen(true)}
             aria-label="Open archive"
             style={{
-              background: "none",
-              border: "1px solid var(--border)",
-              borderRadius: "6px",
-              padding: "0.35rem 0.6rem",
-              cursor: "pointer",
-              color: "var(--fg)",
-              fontSize: "1rem",
-              lineHeight: 1,
+              background: "none", border: "1px solid var(--border)",
+              borderRadius: "7px", padding: "0.3rem 0.55rem",
+              cursor: "pointer", color: "var(--fg)", fontSize: "1rem", lineHeight: 1,
             }}
           >
             ☰
           </button>
-          <span
-            style={{
-              fontSize: "0.85rem",
-              fontFamily: "var(--font-geist-mono)",
-              color: "var(--muted)",
-              flex: 1,
-            }}
-          >
+          <span style={{ fontSize: "0.85rem", fontFamily: "var(--font-geist-mono)", color: "var(--muted)", flex: 1 }}>
             🗞️ Daily Tech Brief
           </span>
           <ThemeToggle />
         </header>
 
-        <div
-          style={{
-            maxWidth: "720px",
-            width: "100%",
-            margin: "0 auto",
-            padding: "2rem 1.5rem 4rem",
-          }}
-        >
+        {/* Desktop collapsed: show a slim toggle bar */}
+        {sidebarCollapsed && (
+          <div className="desktop-only" />
+        )}
+
+        <div style={{ maxWidth: "740px", width: "100%", margin: "0 auto", padding: "2.5rem 1.75rem 5rem" }}>
           <BriefContent content={content} loading={loading} slug={activeSlug} />
         </div>
       </main>

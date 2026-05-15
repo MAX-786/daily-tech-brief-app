@@ -1,73 +1,53 @@
 "use client";
 
-import { useTheme } from "@/lib/theme";
+import { useAppStore } from "@/lib/store";
 
 export default function ThemeToggle() {
-  const { resolved, toggle } = useTheme();
-  const isDark = resolved === "dark";
+  const theme = useAppStore((s) => s.theme);
+  const toggleTheme = useAppStore((s) => s.toggleTheme);
+  const isDark = theme === "dark";
 
   return (
-    <button
-      onClick={toggle}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      title={isDark ? "Light mode" : "Dark mode"}
-      style={{
-        position: "relative",
-        display: "inline-flex",
-        alignItems: "center",
-        width: "44px",
-        height: "24px",
-        borderRadius: "999px",
-        border: "1px solid var(--border)",
-        backgroundColor: isDark ? "var(--accent)" : "var(--sidebar-bg)",
-        cursor: "pointer",
-        padding: "2px",
-        transition: "background-color 0.2s ease",
-        flexShrink: 0,
-      }}
-    >
-      {/* Track icons */}
-      <span
+    <>
+      <style>{`
+        @keyframes spin-in {
+          from { transform: rotate(-90deg) scale(0.6); opacity: 0; }
+          to   { transform: rotate(0deg)  scale(1);   opacity: 1; }
+        }
+        .theme-btn { position: relative; overflow: hidden; }
+        .theme-btn .icon {
+          display: inline-block;
+          animation: spin-in 0.25s ease forwards;
+        }
+        .theme-btn:hover {
+          border-color: var(--accent) !important;
+          color: var(--accent) !important;
+        }
+      `}</style>
+      <button
+        key={isDark ? "moon" : "sun"}
+        onClick={toggleTheme}
+        className="theme-btn"
+        aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+        title={isDark ? "Light mode" : "Dark mode"}
         style={{
-          position: "absolute",
-          left: "5px",
-          fontSize: "10px",
-          lineHeight: 1,
-          opacity: isDark ? 0 : 1,
-          transition: "opacity 0.15s",
-          userSelect: "none",
+          width: "30px",
+          height: "30px",
+          borderRadius: "8px",
+          border: "1px solid var(--border)",
+          background: "transparent",
+          cursor: "pointer",
+          color: "var(--muted)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "15px",
+          flexShrink: 0,
+          transition: "border-color 0.15s, color 0.15s",
         }}
       >
-        ☀️
-      </span>
-      <span
-        style={{
-          position: "absolute",
-          right: "5px",
-          fontSize: "10px",
-          lineHeight: 1,
-          opacity: isDark ? 1 : 0,
-          transition: "opacity 0.15s",
-          userSelect: "none",
-        }}
-      >
-        🌙
-      </span>
-
-      {/* Thumb */}
-      <span
-        style={{
-          position: "absolute",
-          width: "18px",
-          height: "18px",
-          borderRadius: "50%",
-          backgroundColor: isDark ? "#111110" : "#ffffff",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.25)",
-          transform: isDark ? "translateX(20px)" : "translateX(0px)",
-          transition: "transform 0.2s ease, background-color 0.2s ease",
-          left: "2px",
-        }}
-      />
-    </button>
+        <span className="icon">{isDark ? "☀️" : "🌙"}</span>
+      </button>
+    </>
   );
 }

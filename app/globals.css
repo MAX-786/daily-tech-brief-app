@@ -1,164 +1,208 @@
 @import "tailwindcss";
 
 @layer base {
+  /* ── Light mode (warm off-white, not stark white) ── */
   :root {
-    --bg: #fafaf9;
-    --fg: #1c1917;
-    --sidebar-bg: #f5f5f4;
-    --sidebar-border: #e7e5e4;
-    --accent: #b45309;
-    --accent-light: #fef3c7;
-    --muted: #78716c;
-    --code-bg: #f4f0ec;
-    --border: #e7e5e4;
-    --link: #92400e;
-    --divider: #d6d3d1;
+    --bg:              #f7f4ef;   /* warm parchment */
+    --bg-raised:       #ede9e2;   /* slightly deeper for cards */
+    --fg:              #1c1917;
+    --sidebar-bg:      #ede9e2;
+    --sidebar-border:  #ddd8cf;
+    --accent:          #b45309;
+    --accent-light:    #fdf3e3;
+    --muted:           #7a7267;
+    --code-bg:         #e8e3da;
+    --border:          #ddd8cf;
+    --link:            #9a3c0a;
+    --divider:         #d4cec5;
+    --story-bg:        #f0ece5;   /* subtle story card background */
+    --story-border:    #ddd8cf;
   }
 
+  /* ── Dark mode ── */
   .dark {
-    --bg: #111110;
-    --fg: #e7e5e4;
-    --sidebar-bg: #1c1917;
-    --sidebar-border: #292524;
-    --accent: #f59e0b;
-    --accent-light: #292001;
-    --muted: #a8a29e;
-    --code-bg: #1c1917;
-    --border: #292524;
-    --link: #fbbf24;
-    --divider: #292524;
+    --bg:              #111110;
+    --bg-raised:       #171614;
+    --fg:              #e7e5e4;
+    --sidebar-bg:      #1a1917;
+    --sidebar-border:  #272422;
+    --accent:          #f59e0b;
+    --accent-light:    #241c00;
+    --muted:           #a8a29e;
+    --code-bg:         #1a1917;
+    --border:          #272422;
+    --link:            #fbbf24;
+    --divider:         #272422;
+    --story-bg:        #161513;
+    --story-border:    #272422;
   }
 
+  /* System preference (no explicit class) */
   @media (prefers-color-scheme: dark) {
     :root:not(.light) {
-      --bg: #111110;
-      --fg: #e7e5e4;
-      --sidebar-bg: #1c1917;
-      --sidebar-border: #292524;
-      --accent: #f59e0b;
-      --accent-light: #292001;
-      --muted: #a8a29e;
-      --code-bg: #1c1917;
-      --border: #292524;
-      --link: #fbbf24;
-      --divider: #292524;
+      --bg:              #111110;
+      --bg-raised:       #171614;
+      --fg:              #e7e5e4;
+      --sidebar-bg:      #1a1917;
+      --sidebar-border:  #272422;
+      --accent:          #f59e0b;
+      --accent-light:    #241c00;
+      --muted:           #a8a29e;
+      --code-bg:         #1a1917;
+      --border:          #272422;
+      --link:            #fbbf24;
+      --divider:         #272422;
+      --story-bg:        #161513;
+      --story-border:    #272422;
     }
   }
 
-  html {
-    background-color: var(--bg);
-    color: var(--fg);
-  }
-
-  * {
-    border-color: var(--border);
-  }
+  html { background-color: var(--bg); color: var(--fg); }
+  * { border-color: var(--border); box-sizing: border-box; }
+  ::selection { background: var(--accent-light); color: var(--accent); }
 }
 
-/* Prose / Markdown styles */
+/* ─── Markdown / Brief Content ─────────────────────────────────────── */
+
 .brief-content {
   font-size: 1rem;
-  line-height: 1.75;
+  line-height: 1.78;
   color: var(--fg);
 }
 
+/* H1 — brief title */
 .brief-content h1 {
-  font-size: 1.5rem;
+  font-size: 1.55rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.25rem;
+  letter-spacing: -0.025em;
   color: var(--fg);
+  margin-bottom: 0.15rem;
+  line-height: 1.25;
 }
 
+/* Tagline italic right under h1 */
+.brief-content h1 + p em {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-style: normal;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+/* H2 — section headers (🔐 Security etc.) */
 .brief-content h2 {
-  font-size: 1.1rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   color: var(--accent);
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.35rem;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--divider);
 }
 
+/* Story card: h3 + source-line + summary wrapped visually */
 .brief-content h3 {
-  font-size: 1rem;
+  font-size: 0.97rem;
   font-weight: 600;
   color: var(--fg);
-  margin-top: 1.25rem;
-  margin-bottom: 0.25rem;
+  margin-top: 0.85rem;
+  margin-bottom: 0.15rem;
+  line-height: 1.4;
+  padding: 0.85rem 1rem 0;
+  background: var(--story-bg);
+  border: 1px solid var(--story-border);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+
+.brief-content h3 + .source-line {
+  padding: 0 1rem;
+  background: var(--story-bg);
+  border-left: 1px solid var(--story-border);
+  border-right: 1px solid var(--story-border);
+  margin: 0 !important;
+}
+
+.brief-content h3 + .source-line + p {
+  padding: 0 1rem 0.85rem;
+  background: var(--story-bg);
+  border: 1px solid var(--story-border);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  margin-bottom: 0 !important;
 }
 
 .brief-content h3 a {
   color: var(--link);
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, color 0.15s;
 }
 
 .brief-content h3 a:hover {
   border-bottom-color: var(--link);
 }
 
+/* Source / date line */
+.source-line {
+  font-size: 0.76rem;
+  color: var(--muted);
+  font-family: var(--font-geist-mono), monospace;
+  margin: 0 0 0.4rem !important;
+  line-height: 1.4;
+}
+
+/* Body paragraphs */
 .brief-content p {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.7rem;
   color: var(--fg);
 }
 
-.brief-content p strong:first-child {
-  color: var(--muted);
-  font-size: 0.8rem;
-  font-weight: 500;
-  display: block;
-  margin-bottom: 0.2rem;
-  font-family: var(--font-geist-mono), monospace;
-}
-
+/* Links in body */
 .brief-content a {
   color: var(--link);
   text-decoration: none;
-  border-bottom: 1px solid var(--divider);
+  border-bottom: 1px solid transparent;
   transition: border-color 0.15s;
 }
-
 .brief-content a:hover {
   border-bottom-color: var(--link);
 }
 
+/* Signal blockquote */
 .brief-content blockquote {
-  margin: 1.5rem 0;
+  margin: 1.5rem 0 0.5rem;
   padding: 1rem 1.25rem;
   border-left: 3px solid var(--accent);
   background: var(--accent-light);
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 8px 8px 0;
 }
-
 .brief-content blockquote p {
   margin: 0;
-  font-style: italic;
   color: var(--fg);
+  line-height: 1.65;
 }
-
 .brief-content blockquote strong {
-  font-style: normal;
   color: var(--accent);
+  font-style: normal;
 }
 
+/* HR */
 .brief-content hr {
   border: none;
   border-top: 1px solid var(--divider);
-  margin: 1.5rem 0;
+  margin: 0.75rem 0 1.1rem;
 }
 
+/* Code */
 .brief-content code {
   font-family: var(--font-geist-mono), monospace;
-  font-size: 0.85em;
+  font-size: 0.84em;
   background: var(--code-bg);
-  padding: 0.15em 0.35em;
+  padding: 0.15em 0.38em;
   border-radius: 4px;
 }
-
 .brief-content pre {
   background: var(--code-bg);
   border-radius: 8px;
@@ -167,34 +211,22 @@
   border: 1px solid var(--border);
   margin: 1rem 0;
 }
-
 .brief-content pre code {
   background: none;
   padding: 0;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
 }
 
+/* Lists */
 .brief-content ul, .brief-content ol {
-  padding-left: 1.25rem;
+  padding-left: 1.2rem;
   margin-bottom: 0.75rem;
 }
+.brief-content li { margin-bottom: 0.25rem; }
 
-.brief-content li {
-  margin-bottom: 0.25rem;
-}
-
-/* Story card feel — each h3 + content is a mini-card */
-.brief-content h3 + p {
-  margin-top: 0;
-}
-
-/* Frontmatter is hidden */
-.brief-content .frontmatter { display: none; }
-
-/* Source/date line (bold right after h3) */
-.source-line {
-  font-size: 0.78rem;
+/* Footer italic (sources line) */
+.brief-content > p:last-child em {
+  font-size: 0.75rem;
   color: var(--muted);
-  font-family: var(--font-geist-mono), monospace;
-  margin-bottom: 0.35rem;
+  font-style: normal;
 }
