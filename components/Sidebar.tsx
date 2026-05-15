@@ -2,6 +2,7 @@
 
 import type { BriefEntry } from "@/lib/github";
 import { formatShortDate, getTodayIST } from "@/lib/dates";
+import ThemeToggle from "./ThemeToggle";
 
 interface SidebarProps {
   index: BriefEntry[];
@@ -33,8 +34,6 @@ export default function Sidebar({
         top: 0,
         height: "100vh",
         overflowY: "auto",
-        // Mobile: slide in/out
-        // We handle via CSS in a style tag below
         zIndex: 30,
       }}
       className={`sidebar${isOpen ? " sidebar-open" : ""}`}
@@ -72,23 +71,34 @@ export default function Sidebar({
           borderBottom: "1px solid var(--sidebar-border)",
         }}
       >
+        {/* Title row + theme toggle */}
         <div
           style={{
-            fontSize: "0.8rem",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "var(--accent)",
-            fontFamily: "var(--font-geist-mono)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "0.5rem",
+            marginBottom: "0.3rem",
           }}
         >
-          🗞️ Tech Brief
+          <div
+            style={{
+              fontSize: "0.8rem",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--accent)",
+              fontFamily: "var(--font-geist-mono)",
+            }}
+          >
+            🗞️ Tech Brief
+          </div>
+          <ThemeToggle />
         </div>
         <div
           style={{
             fontSize: "0.7rem",
             color: "var(--muted)",
-            marginTop: "0.3rem",
             lineHeight: 1.4,
           }}
         >

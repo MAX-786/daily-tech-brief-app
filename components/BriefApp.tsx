@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import Sidebar from "./Sidebar";
 import BriefContent from "./BriefContent";
+import ThemeToggle from "./ThemeToggle";
 import type { BriefEntry } from "@/lib/github";
 
 interface BriefAppProps {
@@ -118,10 +119,12 @@ export default function BriefApp({
               fontSize: "0.85rem",
               fontFamily: "var(--font-geist-mono)",
               color: "var(--muted)",
+              flex: 1,
             }}
           >
             🗞️ Daily Tech Brief
           </span>
+          <ThemeToggle />
         </header>
 
         <div
