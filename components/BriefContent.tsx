@@ -3,6 +3,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import { ExternalLink } from "lucide-react";
 import { formatDate } from "@/lib/dates";
 
 interface BriefContentProps {
@@ -28,16 +29,16 @@ export default function BriefContent({ content, loading, slug }: BriefContentPro
           }
         `}</style>
         {[
-          { w: "55%", h: "1.7rem" },
-          { w: "38%", h: "0.85rem" },
-          { w: "100%", h: "0.85rem" },
-          { w: "88%", h: "0.85rem" },
-          { w: "100%", h: "0.85rem" },
-          { w: "72%", h: "0.85rem" },
-          { w: "100%", h: "0.85rem" },
-          { w: "60%", h: "0.85rem" },
+          { w: "52%", h: "1.7rem"  },
+          { w: "36%", h: "0.82rem" },
+          { w: "100%", h: "4.5rem" },
+          { w: "100%", h: "4.5rem" },
+          { w: "100%", h: "4.5rem" },
+          { w: "88%", h: "0.82rem" },
+          { w: "100%", h: "4.5rem" },
+          { w: "100%", h: "4.5rem" },
         ].map((s, i) => (
-          <div key={i} className="skel" style={{ width: s.w, height: s.h, opacity: 1 - i * 0.07 }} />
+          <div key={i} className="skel" style={{ width: s.w, height: s.h, opacity: 1 - i * 0.06 }} />
         ))}
       </div>
     );
@@ -61,18 +62,14 @@ export default function BriefContent({ content, loading, slug }: BriefContentPro
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
-          h3: ({ children }) => (
-            <h3>{children}</h3>
-          ),
-          // Paragraphs: detect source line (bold "Source · date") vs normal
+          // Story headline — wrap in card, inject ExternalLink icon on the link
+          h3: ({ children }) => <h3>{children}</h3>,
+
+          // Paragraphs: detect source line vs body
           p: ({ children }) => {
             const arr = Array.isArray(children) ? children : [children];
             const first = arr[0];
-            if (
-              arr.length <= 3 &&
-              typeof first === "object" &&
-              first !== null
-            ) {
+            if (arr.length <= 3 && typeof first === "object" && first !== null) {
               const el = first as React.ReactElement<{ children?: React.ReactNode }>;
               if (el.type === "strong") {
                 const text = typeof el.props?.children === "string" ? el.props.children : "";
@@ -83,9 +80,19 @@ export default function BriefContent({ content, loading, slug }: BriefContentPro
             }
             return <p>{children}</p>;
           },
-          a: ({ href, children }) => (
-            <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
-          ),
+
+          // Links: add ExternalLink icon when inside h3, open in new tab always
+          a: ({ href, children, ...props }) => {
+            // Detect if we're inside an h3 via a parent check is not reliable in react-markdown,
+            // so we inject the icon for all links — it looks clean everywhere
+            return (
+              <a href={href} target="_blank" rel="noopener noreferrer" className="story-link" {...props}>
+                {children}
+                <ExternalLink size={11} strokeWidth={2} className="ext-icon" />
+              </a>
+            );
+          },
+
           hr: () => <hr />,
         }}
       >

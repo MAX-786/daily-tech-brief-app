@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
 import BriefContent from "./BriefContent";
 import ThemeToggle from "./ThemeToggle";
@@ -13,11 +14,7 @@ interface BriefAppProps {
   defaultContent: string;
 }
 
-export default function BriefApp({
-  index,
-  defaultSlug,
-  defaultContent,
-}: BriefAppProps) {
+export default function BriefApp({ index, defaultSlug, defaultContent }: BriefAppProps) {
   const [activeSlug, setActiveSlug] = useState(defaultSlug);
   const [content, setContent] = useState(defaultContent);
   const [loading, setLoading] = useState(false);
@@ -25,28 +22,24 @@ export default function BriefApp({
 
   const sidebarCollapsed = useAppStore((s) => s.sidebarCollapsed);
 
-  const selectBrief = useCallback(
-    async (slug: string) => {
-      setMobileOpen(false);
-      if (slug === activeSlug) return;
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `https://raw.githubusercontent.com/MAX-786/daily-tech-brief/main/briefs/${slug}.md`
-        );
-        const text = res.ok ? await res.text() : "";
-        setContent(text);
-        setActiveSlug(slug);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [activeSlug]
-  );
+  const selectBrief = useCallback(async (slug: string) => {
+    setMobileOpen(false);
+    if (slug === activeSlug) return;
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `https://raw.githubusercontent.com/MAX-786/daily-tech-brief/main/briefs/${slug}.md`
+      );
+      const text = res.ok ? await res.text() : "";
+      setContent(text);
+      setActiveSlug(slug);
+    } finally {
+      setLoading(false);
+    }
+  }, [activeSlug]);
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "var(--bg)" }}>
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div
           style={{
@@ -72,7 +65,7 @@ export default function BriefApp({
           className="mobile-header"
           style={{
             display: "flex", alignItems: "center", gap: "0.75rem",
-            padding: "0.75rem 1rem",
+            padding: "0.65rem 1rem",
             borderBottom: "1px solid var(--border)",
             backgroundColor: "var(--bg)",
             position: "sticky", top: 0, zIndex: 10,
@@ -83,24 +76,26 @@ export default function BriefApp({
             aria-label="Open archive"
             style={{
               background: "none", border: "1px solid var(--border)",
-              borderRadius: "7px", padding: "0.3rem 0.55rem",
-              cursor: "pointer", color: "var(--fg)", fontSize: "1rem", lineHeight: 1,
+              borderRadius: "7px", padding: "0.3rem 0.45rem",
+              cursor: "pointer", color: "var(--fg)",
+              display: "flex", alignItems: "center",
             }}
           >
-            ☰
+            <Menu size={16} strokeWidth={2} />
           </button>
-          <span style={{ fontSize: "0.85rem", fontFamily: "var(--font-geist-mono)", color: "var(--muted)", flex: 1 }}>
-            🗞️ Daily Tech Brief
+          <span style={{
+            fontSize: "0.83rem", fontFamily: "var(--font-geist-mono)",
+            color: "var(--muted)", flex: 1,
+          }}>
+            Daily Tech Brief
           </span>
           <ThemeToggle />
         </header>
 
-        {/* Desktop collapsed: show a slim toggle bar */}
-        {sidebarCollapsed && (
-          <div className="desktop-only" />
-        )}
-
-        <div style={{ maxWidth: "740px", width: "100%", margin: "0 auto", padding: "2.5rem 1.75rem 5rem" }}>
+        <div style={{
+          maxWidth: "740px", width: "100%",
+          margin: "0 auto", padding: "2.5rem 1.75rem 5rem",
+        }}>
           <BriefContent content={content} loading={loading} slug={activeSlug} />
         </div>
       </main>

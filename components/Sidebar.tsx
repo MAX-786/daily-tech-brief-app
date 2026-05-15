@@ -4,6 +4,7 @@ import type { BriefEntry } from "@/lib/github";
 import { formatShortDate, getTodayIST } from "@/lib/dates";
 import ThemeToggle from "./ThemeToggle";
 import { useAppStore } from "@/lib/store";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 interface SidebarProps {
   index: BriefEntry[];
@@ -14,11 +15,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({
-  index,
-  activeSlug,
-  onSelect,
-  mobileOpen,
-  onMobileClose,
+  index, activeSlug, onSelect, mobileOpen, onMobileClose,
 }: SidebarProps) {
   const today = getTodayIST();
   const collapsed = useAppStore((s) => s.sidebarCollapsed);
@@ -28,35 +25,29 @@ export default function Sidebar({
     <>
       <style>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-4px); }
-          to   { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translateX(-6px); }
+          to   { opacity: 1; transform: translateX(0); }
         }
-        .sidebar-nav-item { transition: background 0.12s, border-color 0.12s; }
-        .sidebar-nav-item:hover { background: var(--border) !important; }
+        .nav-item { transition: background 0.12s, border-color 0.12s; }
+        .nav-item:hover { background: var(--border) !important; }
+        .collapse-btn:hover { border-color: var(--accent) !important; color: var(--accent) !important; }
 
-        /* Mobile */
         @media (max-width: 640px) {
           .sidebar-root {
             position: fixed !important;
-            left: -240px;
-            top: 0; height: 100vh;
+            left: -240px; top: 0; height: 100vh;
             transition: left 0.22s cubic-bezier(.4,0,.2,1);
-            box-shadow: none;
           }
           .sidebar-root.mobile-open {
             left: 0;
-            box-shadow: 4px 0 24px rgba(0,0,0,0.18);
+            box-shadow: 4px 0 28px rgba(0,0,0,0.2);
           }
           .mobile-header { display: flex !important; }
-          .sidebar-collapse-btn { display: none !important; }
+          .collapse-btn { display: none !important; }
         }
-        /* Desktop */
         @media (min-width: 641px) {
           .mobile-header { display: none !important; }
-          .sidebar-root {
-            position: sticky !important;
-            top: 0;
-          }
+          .sidebar-root { position: sticky !important; top: 0; }
         }
       `}</style>
 
@@ -67,8 +58,7 @@ export default function Sidebar({
           flexShrink: 0,
           backgroundColor: "var(--sidebar-bg)",
           borderRight: "1px solid var(--sidebar-border)",
-          display: "flex",
-          flexDirection: "column",
+          display: "flex", flexDirection: "column",
           height: "100vh",
           overflowY: collapsed ? "hidden" : "auto",
           overflowX: "hidden",
@@ -77,85 +67,86 @@ export default function Sidebar({
         }}
       >
         {/* Header */}
-        <div
-          style={{
-            padding: collapsed ? "1rem 0" : "1.1rem 1rem 0.8rem",
-            borderBottom: "1px solid var(--sidebar-border)",
-            display: "flex",
-            flexDirection: collapsed ? "column" : "row",
-            alignItems: "center",
-            justifyContent: collapsed ? "center" : "space-between",
-            gap: "0.5rem",
-            minHeight: "64px",
-          }}
-        >
+        <div style={{
+          padding: collapsed ? "0.85rem 0" : "1rem 1rem 0.8rem",
+          borderBottom: "1px solid var(--sidebar-border)",
+          display: "flex",
+          flexDirection: collapsed ? "column" : "row",
+          alignItems: "center",
+          justifyContent: collapsed ? "center" : "space-between",
+          gap: "0.45rem",
+          minHeight: "60px",
+          flexShrink: 0,
+        }}>
           {!collapsed && (
-            <div style={{ animation: "fadeIn 0.18s ease" }}>
+            <div style={{ animation: "fadeIn 0.18s ease", minWidth: 0 }}>
               <div style={{
-                fontSize: "0.78rem", fontWeight: 700,
+                fontSize: "0.76rem", fontWeight: 700,
                 letterSpacing: "0.08em", textTransform: "uppercase",
                 color: "var(--accent)", fontFamily: "var(--font-geist-mono)",
                 whiteSpace: "nowrap",
               }}>
-                🗞️ Tech Brief
+                🗞 Tech Brief
               </div>
-              <div style={{ fontSize: "0.68rem", color: "var(--muted)", marginTop: "0.2rem", lineHeight: 1.4 }}>
+              <div style={{ fontSize: "0.67rem", color: "var(--muted)", marginTop: "0.15rem", lineHeight: 1.4 }}>
                 Daily · 8 AM IST
               </div>
             </div>
           )}
 
-          <div style={{ display: "flex", flexDirection: collapsed ? "column" : "row", gap: "0.35rem", alignItems: "center" }}>
-            {/* Collapse toggle (desktop only) */}
+          <div style={{
+            display: "flex",
+            flexDirection: collapsed ? "column" : "row",
+            gap: "0.3rem", alignItems: "center",
+            flexShrink: 0,
+          }}>
             <button
               onClick={toggleSidebar}
-              className="sidebar-collapse-btn"
+              className="collapse-btn"
               aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              title={collapsed ? "Expand" : "Collapse"}
               style={{
-                width: "28px", height: "28px",
-                borderRadius: "7px",
-                border: "1px solid var(--border)",
-                background: "transparent",
+                width: "28px", height: "28px", borderRadius: "7px",
+                border: "1px solid var(--border)", background: "transparent",
                 cursor: "pointer", color: "var(--muted)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: "12px", flexShrink: 0,
-                transition: "border-color 0.15s, color 0.15s, transform 0.2s",
-                transform: collapsed ? "rotate(180deg)" : "rotate(0deg)",
+                flexShrink: 0, transition: "border-color 0.15s, color 0.15s",
               }}
             >
-              ‹
+              {collapsed
+                ? <PanelLeftOpen size={14} strokeWidth={2} />
+                : <PanelLeftClose size={14} strokeWidth={2} />}
             </button>
             {!collapsed && <ThemeToggle />}
           </div>
         </div>
 
-        {/* Collapsed: show only theme toggle + date dots */}
+        {/* Collapsed: dots + theme toggle */}
         {collapsed ? (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", paddingTop: "0.75rem", gap: "0.5rem" }}>
+          <div style={{
+            display: "flex", flexDirection: "column",
+            alignItems: "center", paddingTop: "0.75rem", gap: "0.5rem",
+          }}>
             <ThemeToggle />
-            <div style={{ width: "1px", height: "12px", backgroundColor: "var(--divider)", margin: "0.25rem 0" }} />
-            {index.slice(0, 10).map((entry) => (
+            <div style={{ width: "1px", height: "10px", backgroundColor: "var(--divider)", margin: "0.2rem 0" }} />
+            {index.slice(0, 12).map((entry) => (
               <button
                 key={entry.date}
                 onClick={() => onSelect(entry.date)}
                 title={entry.title}
                 style={{
-                  width: "8px", height: "8px", borderRadius: "50%",
+                  width: "7px", height: "7px", borderRadius: "50%",
                   border: "none", cursor: "pointer", padding: 0,
                   backgroundColor: entry.date === activeSlug ? "var(--accent)" : "var(--border)",
-                  transition: "background 0.15s",
-                  flexShrink: 0,
+                  transition: "background 0.15s", flexShrink: 0,
                 }}
               />
             ))}
           </div>
         ) : (
           <>
-            {/* Archive list */}
-            <nav style={{ padding: "0.4rem 0", flex: 1, animation: "fadeIn 0.18s ease" }}>
+            <nav style={{ padding: "0.35rem 0", flex: 1, animation: "fadeIn 0.18s ease" }}>
               <div style={{
-                fontSize: "0.62rem", fontFamily: "var(--font-geist-mono)",
+                fontSize: "0.6rem", fontFamily: "var(--font-geist-mono)",
                 textTransform: "uppercase", letterSpacing: "0.1em",
                 color: "var(--muted)", padding: "0.5rem 1rem 0.3rem",
               }}>
@@ -175,10 +166,10 @@ export default function Sidebar({
                   <button
                     key={entry.date}
                     onClick={() => onSelect(entry.date)}
-                    className="sidebar-nav-item"
+                    className="nav-item"
                     style={{
                       width: "100%", textAlign: "left",
-                      padding: "0.45rem 1rem",
+                      padding: "0.42rem 1rem",
                       background: isActive ? "var(--accent-light)" : "transparent",
                       border: "none",
                       borderLeft: isActive ? "2px solid var(--accent)" : "2px solid transparent",
@@ -187,21 +178,19 @@ export default function Sidebar({
                     }}
                   >
                     <span style={{
-                      fontSize: "0.82rem",
+                      fontSize: "0.81rem",
                       color: isActive ? "var(--accent)" : "var(--fg)",
                       fontWeight: isActive ? 600 : 400,
-                      fontFamily: "var(--font-geist-sans)",
                       whiteSpace: "nowrap",
                     }}>
                       {formatShortDate(entry.date)}
                     </span>
                     {isToday && (
                       <span style={{
-                        fontSize: "0.58rem", background: "var(--accent)", color: "var(--bg)",
+                        fontSize: "0.57rem", background: "var(--accent)", color: "var(--bg)",
                         borderRadius: "4px", padding: "0.1em 0.4em",
                         fontFamily: "var(--font-geist-mono)", fontWeight: 700,
-                        textTransform: "uppercase", letterSpacing: "0.04em",
-                        whiteSpace: "nowrap",
+                        textTransform: "uppercase", letterSpacing: "0.04em", whiteSpace: "nowrap",
                       }}>
                         today
                       </span>
@@ -211,18 +200,14 @@ export default function Sidebar({
               })}
             </nav>
 
-            {/* Footer */}
             <div style={{
-              padding: "0.7rem 1rem",
+              padding: "0.65rem 1rem",
               borderTop: "1px solid var(--sidebar-border)",
-              fontSize: "0.64rem", color: "var(--muted)", lineHeight: 1.5,
+              fontSize: "0.63rem", color: "var(--muted)", lineHeight: 1.5, flexShrink: 0,
             }}>
               Curated by{" "}
-              <a
-                href="https://github.com/MAX-786"
-                target="_blank" rel="noopener noreferrer"
-                style={{ color: "var(--link)" }}
-              >
+              <a href="https://github.com/MAX-786" target="_blank" rel="noopener noreferrer"
+                style={{ color: "var(--link)" }}>
                 Mohammad K. Hussain
               </a>
             </div>

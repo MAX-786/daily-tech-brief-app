@@ -1,59 +1,58 @@
 @import "tailwindcss";
 
 @layer base {
-  /* ── Light mode (warm off-white, not stark white) ── */
+  /* ── Light mode (warm off-white parchment) ── */
   :root {
-    --bg:              #f7f4ef;   /* warm parchment */
-    --bg-raised:       #ede9e2;   /* slightly deeper for cards */
-    --fg:              #1c1917;
-    --sidebar-bg:      #ede9e2;
-    --sidebar-border:  #ddd8cf;
-    --accent:          #b45309;
-    --accent-light:    #fdf3e3;
-    --muted:           #7a7267;
-    --code-bg:         #e8e3da;
-    --border:          #ddd8cf;
-    --link:            #9a3c0a;
-    --divider:         #d4cec5;
-    --story-bg:        #f0ece5;   /* subtle story card background */
-    --story-border:    #ddd8cf;
+    --bg:             #f7f4ef;
+    --bg-raised:      #ede9e2;
+    --fg:             #1c1917;
+    --sidebar-bg:     #ede9e2;
+    --sidebar-border: #ddd8cf;
+    --accent:         #b45309;
+    --accent-light:   #fdf3e3;
+    --muted:          #7a7267;
+    --code-bg:        #e8e3da;
+    --border:         #ddd8cf;
+    --link:           #9a3c0a;
+    --divider:        #d4cec5;
+    --card-bg:        #f0ece5;
+    --card-border:    #ddd8cf;
   }
 
   /* ── Dark mode ── */
   .dark {
-    --bg:              #111110;
-    --bg-raised:       #171614;
-    --fg:              #e7e5e4;
-    --sidebar-bg:      #1a1917;
-    --sidebar-border:  #272422;
-    --accent:          #f59e0b;
-    --accent-light:    #241c00;
-    --muted:           #a8a29e;
-    --code-bg:         #1a1917;
-    --border:          #272422;
-    --link:            #fbbf24;
-    --divider:         #272422;
-    --story-bg:        #161513;
-    --story-border:    #272422;
+    --bg:             #111110;
+    --bg-raised:      #171614;
+    --fg:             #e7e5e4;
+    --sidebar-bg:     #1a1917;
+    --sidebar-border: #272422;
+    --accent:         #f59e0b;
+    --accent-light:   #241c00;
+    --muted:          #a8a29e;
+    --code-bg:        #1a1917;
+    --border:         #272422;
+    --link:           #fbbf24;
+    --divider:        #272422;
+    --card-bg:        #161513;
+    --card-border:    #272422;
   }
 
-  /* System preference (no explicit class) */
   @media (prefers-color-scheme: dark) {
     :root:not(.light) {
-      --bg:              #111110;
-      --bg-raised:       #171614;
-      --fg:              #e7e5e4;
-      --sidebar-bg:      #1a1917;
-      --sidebar-border:  #272422;
-      --accent:          #f59e0b;
-      --accent-light:    #241c00;
-      --muted:           #a8a29e;
-      --code-bg:         #1a1917;
-      --border:          #272422;
-      --link:            #fbbf24;
-      --divider:         #272422;
-      --story-bg:        #161513;
-      --story-border:    #272422;
+      --bg:             #111110;
+      --bg-raised:      #171614;
+      --fg:             #e7e5e4;
+      --sidebar-bg:     #1a1917;
+      --sidebar-border: #272422;
+      --accent:         #f59e0b;
+      --accent-light:   #241c00;
+      --muted:          #a8a29e;
+      --code-bg:        #1a1917;
+      --border:         #272422;
+      --link:           #fbbf24;
+      --divider:        #272422;
+      --card-bg:        #161513;
+      --card-border:    #272422;
     }
   }
 
@@ -62,7 +61,7 @@
   ::selection { background: var(--accent-light); color: var(--accent); }
 }
 
-/* ─── Markdown / Brief Content ─────────────────────────────────────── */
+/* ─── Brief Markdown ─────────────────────────────────────────────────── */
 
 .brief-content {
   font-size: 1rem;
@@ -72,86 +71,140 @@
 
 /* H1 — brief title */
 .brief-content h1 {
-  font-size: 1.55rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: -0.025em;
   color: var(--fg);
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.1rem;
   line-height: 1.25;
 }
 
-/* Tagline italic right under h1 */
-.brief-content h1 + p em {
-  font-size: 0.82rem;
+/* Tagline line right under H1 */
+.brief-content h1 + p {
+  font-size: 0.8rem;
   color: var(--muted);
-  font-style: normal;
   font-family: var(--font-geist-mono), monospace;
+  margin-bottom: 0.5rem;
 }
+.brief-content h1 + p em { font-style: normal; }
 
-/* H2 — section headers (🔐 Security etc.) */
+/* H2 — section header (🔐 Security etc.) */
 .brief-content h2 {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--accent);
-  margin-top: 2.5rem;
-  margin-bottom: 0.75rem;
+  margin-top: 2.25rem;
+  margin-bottom: 0.9rem;
   padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--divider);
 }
 
-/* Story card: h3 + source-line + summary wrapped visually */
+/* ── Story card ──────────────────────────────────────────────────────── */
+/*
+  Each story is: h3, .source-line, p (summary), hr
+  We draw the card on h3 and continue the card background on the
+  following siblings until the hr.
+*/
+
 .brief-content h3 {
-  font-size: 0.97rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--fg);
-  margin-top: 0.85rem;
-  margin-bottom: 0.15rem;
   line-height: 1.4;
-  padding: 0.85rem 1rem 0;
-  background: var(--story-bg);
-  border: 1px solid var(--story-border);
+  margin: 0 0 0 0;
+  /* card top */
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-bottom: none;
-  border-radius: 8px 8px 0 0;
-}
-
-.brief-content h3 + .source-line {
-  padding: 0 1rem;
-  background: var(--story-bg);
-  border-left: 1px solid var(--story-border);
-  border-right: 1px solid var(--story-border);
-  margin: 0 !important;
-}
-
-.brief-content h3 + .source-line + p {
-  padding: 0 1rem 0.85rem;
-  background: var(--story-bg);
-  border: 1px solid var(--story-border);
-  border-top: none;
-  border-radius: 0 0 8px 8px;
-  margin-bottom: 0 !important;
+  border-radius: 9px 9px 0 0;
+  padding: 0.8rem 0.95rem 0.45rem;
 }
 
 .brief-content h3 a {
   color: var(--link);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.15s, color 0.15s;
+  transition: color 0.15s;
 }
+.brief-content h3 a:hover { color: var(--accent); }
 
-.brief-content h3 a:hover {
-  border-bottom-color: var(--link);
+/* ExternalLink icon inside h3 links */
+.brief-content h3 .story-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
 }
+.brief-content h3 .ext-icon {
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.brief-content h3 .story-link:hover .ext-icon { opacity: 1; }
 
-/* Source / date line */
+/* Source line — card middle strip */
 .source-line {
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   color: var(--muted);
   font-family: var(--font-geist-mono), monospace;
-  margin: 0 0 0.4rem !important;
+  margin: 0 !important;
+  padding: 0.2rem 0.95rem 0.45rem;
+  background: var(--card-bg);
+  border-left: 1px solid var(--card-border);
+  border-right: 1px solid var(--card-border);
   line-height: 1.4;
+  display: block;
 }
+
+/* Summary paragraph — card bottom */
+.brief-content h3 + .source-line + p,
+.brief-content h3 + p:not(.source-line) {
+  margin: 0 !important;
+  padding: 0.45rem 0.95rem 0.8rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-top: none;
+  border-radius: 0 0 9px 9px;
+  color: var(--fg);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+/* HR between stories */
+.brief-content hr {
+  border: none;
+  margin: 0.65rem 0;
+}
+
+/* ── Body links (outside h3) ── */
+.brief-content p a,
+.brief-content li a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+.brief-content p a:hover,
+.brief-content li a:hover { border-bottom-color: var(--link); }
+
+/* ExternalLink icon inline for body links */
+.story-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2em;
+}
+.ext-icon {
+  flex-shrink: 0;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  opacity: 0.45;
+  transition: opacity 0.15s;
+}
+.story-link:hover .ext-icon { opacity: 0.85; }
 
 /* Body paragraphs */
 .brief-content p {
@@ -159,21 +212,10 @@
   color: var(--fg);
 }
 
-/* Links in body */
-.brief-content a {
-  color: var(--link);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.15s;
-}
-.brief-content a:hover {
-  border-bottom-color: var(--link);
-}
-
 /* Signal blockquote */
 .brief-content blockquote {
   margin: 1.5rem 0 0.5rem;
-  padding: 1rem 1.25rem;
+  padding: 1rem 1.1rem;
   border-left: 3px solid var(--accent);
   background: var(--accent-light);
   border-radius: 0 8px 8px 0;
@@ -182,18 +224,9 @@
   margin: 0;
   color: var(--fg);
   line-height: 1.65;
+  font-size: 0.95rem;
 }
-.brief-content blockquote strong {
-  color: var(--accent);
-  font-style: normal;
-}
-
-/* HR */
-.brief-content hr {
-  border: none;
-  border-top: 1px solid var(--divider);
-  margin: 0.75rem 0 1.1rem;
-}
+.brief-content blockquote strong { color: var(--accent); font-style: normal; }
 
 /* Code */
 .brief-content code {
@@ -211,22 +244,14 @@
   border: 1px solid var(--border);
   margin: 1rem 0;
 }
-.brief-content pre code {
-  background: none;
-  padding: 0;
-  font-size: 0.84rem;
-}
+.brief-content pre code { background: none; padding: 0; font-size: 0.84rem; }
 
 /* Lists */
-.brief-content ul, .brief-content ol {
-  padding-left: 1.2rem;
-  margin-bottom: 0.75rem;
-}
+.brief-content ul, .brief-content ol { padding-left: 1.2rem; margin-bottom: 0.75rem; }
 .brief-content li { margin-bottom: 0.25rem; }
 
-/* Footer italic (sources line) */
-.brief-content > p:last-child em {
-  font-size: 0.75rem;
+/* Footer sources line */
+.brief-content > p:last-child {
+  font-size: 0.74rem;
   color: var(--muted);
-  font-style: normal;
 }
