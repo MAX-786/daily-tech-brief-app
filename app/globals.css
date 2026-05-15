@@ -69,39 +69,86 @@
   color: var(--fg);
 }
 
-/* H1 — brief title */
-.brief-content h1 {
-  font-size: 1.5rem;
+/* H1 — brief title with newspaper icon */
+.brief-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: -0.025em;
   color: var(--fg);
   margin-bottom: 0.1rem;
   line-height: 1.25;
 }
+.brief-title-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+  position: relative;
+  top: 1px;
+}
 
-/* Tagline line right under H1 */
-.brief-content h1 + p {
+/* H2 — section header via SectionHeading component */
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--accent);
+  margin-top: 2.5rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--divider);
+  position: relative;
+  scroll-margin-top: 1.5rem;
+}
+.section-icon {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+.section-text {
+  flex: 1;
+}
+
+/* Anchor copy button — hidden until hover */
+.anchor-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.15s, border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+  margin-left: 0.1rem;
+}
+.section-heading:hover .anchor-btn {
+  opacity: 1;
+}
+.anchor-btn:hover {
+  border-color: var(--border);
+  color: var(--accent);
+}
+
+
+/* Tagline — the italic line right after the h1 */
+.brief-content .brief-title + p {
   font-size: 0.8rem;
   color: var(--muted);
   font-family: var(--font-geist-mono), monospace;
   margin-bottom: 0.5rem;
 }
-.brief-content h1 + p em { font-style: normal; }
+.brief-content .brief-title + p em { font-style: normal; }
 
-/* H2 — section header (🔐 Security etc.) */
-.brief-content h2 {
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--accent);
-  margin-top: 2.25rem;
-  margin-bottom: 0.9rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--divider);
-}
 
-/* ── Story card ──────────────────────────────────────────────────────── */
 /*
   Each story is: h3, .source-line, p (summary), hr
   We draw the card on h3 and continue the card background on the

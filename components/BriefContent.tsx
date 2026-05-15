@@ -3,8 +3,9 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Newspaper } from "lucide-react";
 import { formatDate } from "@/lib/dates";
+import SectionHeading, { childrenToText } from "./SectionHeading";
 
 interface BriefContentProps {
   content: string;
@@ -47,7 +48,7 @@ export default function BriefContent({ content, loading, slug }: BriefContentPro
   if (!content) {
     return (
       <div style={{ paddingTop: "5rem", textAlign: "center", color: "var(--muted)" }}>
-        <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>🗞️</div>
+        <Newspaper size={40} strokeWidth={1.5} style={{ margin: "0 auto 1rem", display: "block", opacity: 0.4 }} />
         <p style={{ fontSize: "1rem", color: "var(--fg)" }}>No brief found for {formatDate(slug)}.</p>
         <p style={{ fontSize: "0.83rem", marginTop: "0.5rem" }}>Briefs are published at 8 AM IST daily.</p>
       </div>
@@ -62,10 +63,26 @@ export default function BriefContent({ content, loading, slug }: BriefContentPro
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
-          // Story headline — wrap in card, inject ExternalLink icon on the link
+          // H1 — replace leading 🗞️ emoji with Newspaper icon
+          h1: ({ children }) => {
+            const text = childrenToText(children);
+            // Strip the leading newspaper emoji if present
+            const label = text.replace(/^🗞️?\s*/u, "").trim();
+            return (
+              <h1 className="brief-title">
+                <Newspaper size={22} strokeWidth={1.8} className="brief-title-icon" aria-hidden />
+                <span>{label}</span>
+              </h1>
+            );
+          },
+
+          // H2 — section heading with icon + anchor
+          h2: ({ children }) => <SectionHeading>{children}</SectionHeading>,
+
+          // H3 — story headline card top
           h3: ({ children }) => <h3>{children}</h3>,
 
-          // Paragraphs: detect source line vs body
+          // Paragraphs — detect source line
           p: ({ children }) => {
             const arr = Array.isArray(children) ? children : [children];
             const first = arr[0];
@@ -81,17 +98,13 @@ export default function BriefContent({ content, loading, slug }: BriefContentPro
             return <p>{children}</p>;
           },
 
-          // Links: add ExternalLink icon when inside h3, open in new tab always
-          a: ({ href, children, ...props }) => {
-            // Detect if we're inside an h3 via a parent check is not reliable in react-markdown,
-            // so we inject the icon for all links — it looks clean everywhere
-            return (
-              <a href={href} target="_blank" rel="noopener noreferrer" className="story-link" {...props}>
-                {children}
-                <ExternalLink size={11} strokeWidth={2} className="ext-icon" />
-              </a>
-            );
-          },
+          // Links — external link icon
+          a: ({ href, children, ...props }) => (
+            <a href={href} target="_blank" rel="noopener noreferrer" className="story-link" {...props}>
+              {children}
+              <ExternalLink size={11} strokeWidth={2} className="ext-icon" />
+            </a>
+          ),
 
           hr: () => <hr />,
         }}
