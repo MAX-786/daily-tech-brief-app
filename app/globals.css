@@ -1,26 +1,200 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #fafaf9;
+    --fg: #1c1917;
+    --sidebar-bg: #f5f5f4;
+    --sidebar-border: #e7e5e4;
+    --accent: #b45309;
+    --accent-light: #fef3c7;
+    --muted: #78716c;
+    --code-bg: #f4f0ec;
+    --border: #e7e5e4;
+    --link: #92400e;
+    --divider: #d6d3d1;
+  }
+
+  .dark {
+    --bg: #111110;
+    --fg: #e7e5e4;
+    --sidebar-bg: #1c1917;
+    --sidebar-border: #292524;
+    --accent: #f59e0b;
+    --accent-light: #292001;
+    --muted: #a8a29e;
+    --code-bg: #1c1917;
+    --border: #292524;
+    --link: #fbbf24;
+    --divider: #292524;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light) {
+      --bg: #111110;
+      --fg: #e7e5e4;
+      --sidebar-bg: #1c1917;
+      --sidebar-border: #292524;
+      --accent: #f59e0b;
+      --accent-light: #292001;
+      --muted: #a8a29e;
+      --code-bg: #1c1917;
+      --border: #292524;
+      --link: #fbbf24;
+      --divider: #292524;
+    }
+  }
+
+  html {
+    background-color: var(--bg);
+    color: var(--fg);
+  }
+
+  * {
+    border-color: var(--border);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Prose / Markdown styles */
+.brief-content {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--fg);
+}
+
+.brief-content h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+  color: var(--fg);
+}
+
+.brief-content h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--divider);
+}
+
+.brief-content h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin-top: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.brief-content h3 a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+
+.brief-content h3 a:hover {
+  border-bottom-color: var(--link);
+}
+
+.brief-content p {
+  margin-bottom: 0.75rem;
+  color: var(--fg);
+}
+
+.brief-content p strong:first-child {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.2rem;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+.brief-content a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid var(--divider);
+  transition: border-color 0.15s;
+}
+
+.brief-content a:hover {
+  border-bottom-color: var(--link);
+}
+
+.brief-content blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-light);
+  border-radius: 0 6px 6px 0;
+}
+
+.brief-content blockquote p {
+  margin: 0;
+  font-style: italic;
+  color: var(--fg);
+}
+
+.brief-content blockquote strong {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.brief-content hr {
+  border: none;
+  border-top: 1px solid var(--divider);
+  margin: 1.5rem 0;
+}
+
+.brief-content code {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.85em;
+  background: var(--code-bg);
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+}
+
+.brief-content pre {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  margin: 1rem 0;
+}
+
+.brief-content pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.brief-content ul, .brief-content ol {
+  padding-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.brief-content li {
+  margin-bottom: 0.25rem;
+}
+
+/* Story card feel — each h3 + content is a mini-card */
+.brief-content h3 + p {
+  margin-top: 0;
+}
+
+/* Frontmatter is hidden */
+.brief-content .frontmatter { display: none; }
+
+/* Source/date line (bold right after h3) */
+.source-line {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-family: var(--font-geist-mono), monospace;
+  margin-bottom: 0.35rem;
 }
