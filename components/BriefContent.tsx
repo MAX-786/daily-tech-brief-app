@@ -2,7 +2,8 @@
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
+// rehype-raw intentionally removed — renders arbitrary HTML from markdown,
+// which is an XSS vector if the upstream data repo is ever compromised.
 import { ExternalLink, Newspaper } from "lucide-react";
 import { formatDate } from "@/lib/dates";
 import SectionHeading, { childrenToText } from "./SectionHeading";
@@ -61,7 +62,6 @@ export default function BriefContent({ content, loading, slug }: BriefContentPro
     <article className="brief-content">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
         components={{
           // H1 — replace leading 🗞️ emoji with Newspaper icon
           h1: ({ children }) => {

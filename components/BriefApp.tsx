@@ -25,6 +25,11 @@ export default function BriefApp({ index, defaultSlug, defaultContent }: BriefAp
   const selectBrief = useCallback(async (slug: string) => {
     setMobileOpen(false);
     if (slug === activeSlug) return;
+
+    // Validate slug: only YYYY-MM-DD format allowed — prevents path traversal
+    // or probing arbitrary paths on raw.githubusercontent.com
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(slug)) return;
+
     setLoading(true);
     try {
       const res = await fetch(
