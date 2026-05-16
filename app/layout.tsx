@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ThemeInit from "@/components/ThemeInit";
 import ThemeSync from "@/components/ThemeSync";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,6 +43,7 @@ export default function RootLayout({
         {/* Syncs system/localStorage pref into Zustand on mount */}
         <ThemeSync />
         {children}
+        <Analytics />
       </body>
     </html>
   );
