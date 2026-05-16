@@ -1,0 +1,44 @@
+# Daily Tech Brief
+
+> AI-curated daily technology briefing — security, AI/LLMs, JS/React, dev tools, and industry news. Fresh at 8 AM IST every day.
+
+## What is this?
+
+Daily Tech Brief (https://news.mkhismkh.com) is a personal, AI-powered news digest built by Mohammad K. Hussain.
+Every morning at 8 AM IST, an autonomous agent aggregates, filters, and summarises the most relevant tech stories across five categories — security, AI/LLMs, JavaScript/React, developer tools, and general industry news — and publishes them as a clean, readable briefing.
+
+## Who is it for?
+
+Developers, engineers, and tech enthusiasts who want a high signal-to-noise daily digest without visiting dozens of sources manually.
+
+## Content
+
+- Security & vulnerabilities
+- AI research and LLM news
+- JavaScript / React / frontend ecosystem
+- Developer tools and productivity
+- General tech industry news
+
+## Key pages
+
+- / — Today's briefing (latest edition)
+- /sitemap.xml — Full sitemap
+
+## Author
+
+Mohammad K. Hussain
+- GitHub: https://github.com/MAX-786
+- LinkedIn: https://www.linkedin.com/in/mohammad-k-hussain
+
+## Usage policy
+
+This site is fully open to crawling, indexing, scraping, and AI training.
+No paywalls, no login walls. Content is updated daily.
+
+## Technical
+
+- Built with Next.js (App Router) and deployed on Vercel
+- Hosted at: https://news.mkhismkh.com
+- Sitemap: https://news.mkhismkh.com/sitemap.xml
+- Robots: https://news.mkhismkh.com/robots.txt
+- llms.txt: https://news.mkhismkh.com/llms.txt
