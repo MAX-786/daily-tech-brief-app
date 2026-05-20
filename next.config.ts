@@ -6,7 +6,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src 'self' https://fonts.gstatic.com;
   img-src 'self' data: https:;
-  connect-src 'self' https://raw.githubusercontent.com https://vitals.vercel-insights.com;
+  connect-src 'self' https://raw.githubusercontent.com https://vitals.vercel-insights.com https://vercel-insights.com;
   frame-ancestors 'none';
   base-uri 'self';
   form-action 'self';
